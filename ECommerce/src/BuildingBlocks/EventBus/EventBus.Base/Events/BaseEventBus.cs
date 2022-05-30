@@ -15,34 +15,35 @@ namespace EventBus.Base.Events
         public readonly IServiceProvider ServiceProvider;
         public readonly IEventBusSubscriptionManager SubsManager;
 
-        private EventBusConfig _config;
+        public EventBusConfig EventBusConfig { get; set; }
 
         public BaseEventBus(IServiceProvider serviceProvider, EventBusConfig config)
         {
             ServiceProvider = serviceProvider;
             SubsManager = new InMemoryEventBusSubscriptionManager(ProcessEventName);
-            _config = config;
+            EventBusConfig = config;
         }
 
         public virtual string ProcessEventName(string eventName)
         {
-            if(_config.DeleteEventPrefix)
-                eventName = eventName.TrimStart(_config.EventNamePrefix.ToArray());
+            if(EventBusConfig.DeleteEventPrefix)
+                eventName = eventName.TrimStart(EventBusConfig.EventNamePrefix.ToArray());
 
-            if(_config.DeleteEventSuffix)
-                eventName = eventName.TrimEnd(_config.EventNameSuffix.ToArray());
+            if(EventBusConfig.DeleteEventSuffix)
+                eventName = eventName.TrimEnd(EventBusConfig.EventNameSuffix.ToArray());
 
             return eventName;
         }
 
         public virtual string GetSubName(string eventName)
         {
-            return $"{_config.SubscriberClientAppName}.{ProcessEventName(eventName)}";
+            return $"{EventBusConfig.SubscriberClientAppName}.{ProcessEventName(eventName)}";
         }
 
         public virtual void Dispose()
         {
-            _config = null;
+            EventBusConfig = null;
+            SubsManager.Clear();
         }
 
         public async Task<bool> ProcessEvent(string eventName, string message)
@@ -62,7 +63,7 @@ namespace EventBus.Base.Events
                         var handler = ServiceProvider.GetService(subscription.HandlerType);
                         if (handler != null) continue;
 
-                        var eventType = SubsManager.GetEventTypeByName($"{_config.EventNamePrefix}{eventName}{_config.EventNameSuffix}");
+                        var eventType = SubsManager.GetEventTypeByName($"{EventBusConfig.EventNamePrefix}{eventName}{EventBusConfig.EventNameSuffix}");
                         var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
 
                         var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
