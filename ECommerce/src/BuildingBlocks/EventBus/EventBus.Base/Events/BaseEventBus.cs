@@ -61,7 +61,7 @@ namespace EventBus.Base.Events
                     foreach (var subscription in subscriptions)
                     {
                         var handler = ServiceProvider.GetService(subscription.HandlerType);
-                        if (handler != null) continue;
+                        if (handler == null) continue;
 
                         var eventType = SubsManager.GetEventTypeByName($"{EventBusConfig.EventNamePrefix}{eventName}{EventBusConfig.EventNameSuffix}");
                         var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
