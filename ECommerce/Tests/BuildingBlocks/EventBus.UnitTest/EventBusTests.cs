@@ -20,7 +20,8 @@ namespace EventBus.UnitTest
         [Fact]
         public void subscribe_event_on_rabbitmq_test()
         {
-            _services.AddSingleton<IEventBus>(sp => {
+            _services.AddSingleton<IEventBus>(sp =>
+            {
                 EventBusConfig config = new()
                 {
                     ConnectionRetryCount = 5,
@@ -31,7 +32,7 @@ namespace EventBus.UnitTest
                     //Connection = new ConnectionFactory()
                     //{
                     //    HostName = "localhost",
-                    //    Port = 5672,
+                    //    Port = -1,
                     //    UserName = "guest",
                     //    Password = "guest"
                     //}
@@ -50,7 +51,8 @@ namespace EventBus.UnitTest
         [Fact]
         public void send_message_to_rabbitmq()
         {
-            _services.AddSingleton<IEventBus>(sp => {
+            _services.AddSingleton<IEventBus>(sp =>
+            {
                 EventBusConfig config = new()
                 {
                     ConnectionRetryCount = 5,
