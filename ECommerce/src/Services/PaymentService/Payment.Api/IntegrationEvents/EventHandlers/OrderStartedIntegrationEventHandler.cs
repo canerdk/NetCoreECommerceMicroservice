@@ -17,7 +17,7 @@ namespace Payment.Api.IntegrationEvents.EventHandlers
 
         public Task Handle(OrderStartedIntegrationEvent @event)
         {
-            bool paymentFlag = false;
+            bool paymentFlag = true;
 
             IntegrationEvent paymentEvent = paymentFlag ? new OrderPaymentSuccessIntegrationEvent(@event.OrderId) : new OrderPaymentFailedIntegrationEvent(@event.OrderId, "Fake error");
 
