@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.RegisterWithConsul(app.Lifetime);
+app.RegisterWithConsul(app.Configuration);
 
 app.UseHttpsRedirection();
 

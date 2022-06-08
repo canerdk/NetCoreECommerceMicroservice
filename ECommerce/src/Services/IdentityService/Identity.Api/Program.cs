@@ -74,13 +74,15 @@ builder.Services.AddSwaggerGen(swagger =>
 builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 var app = builder.Build();
-app.RegisterWithConsul(app.Lifetime);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.RegisterWithConsul(app.Configuration);
 
 app.UseAuthentication();
 app.UseAuthorization();
